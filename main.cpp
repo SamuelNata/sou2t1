@@ -110,22 +110,21 @@ void dataUpdate( Things_t & d, BlackLib::BlackGPIO & ledR, BlackLib::BlackGPIO &
         d.time = 3;
         d.led_color = setColor((1+rand())%3, &ledR, &ledG, &ledB);
         d.pot_adc = readAnalog(1);
-        /*if (bbb_dht_read(tipo, base, numero, &d.humidity, &d.temperature) != 0)
+        if (bbb_dht_read(tipo, base, numero, &d.humidity, &d.temperature) != 0)
         {
             printf("Erro na leitura do sensor\n");
         }
         else
         {
-        */
             printf("Cliente: enviando dados... ");
-            //bytesenviados = send(socketId, &d, sizeof(Things_t), 0);
+            bytesenviados = send(socketId, &d, sizeof(Things_t), 0);
             printf("dados enviados.\n");
             if (bytesenviados == -1)
             {
                 printf("Falha ao executar send()");
-                //exit(EXIT_FAILURE);
+                exit(EXIT_FAILURE);
             }
-        //}
+        }
         sleep(d.time);
     }
 }
@@ -147,7 +146,7 @@ int main(int argc, char *argv[])
 {
     signal(SIGINT, exit );
 
-    system("sudo sh -c \"echo 'BB-ADC' > /sys/devices/platform/bone_capemgr/slots\"");
+    //system("sudo sh -c \"echo 'BB-ADC' > /sys/devices/platform/bone_capemgr/slots\"");
 
     Things_t d;
 
@@ -161,14 +160,14 @@ int main(int argc, char *argv[])
     if (socketId == -1)
     {
         printf("Falha ao executar socket()\n");
-        //exit(EXIT_FAILURE);
+        exit(EXIT_FAILURE);
     }
 
-    /*if( connect( socketId, (struct sockaddr *)&endereco, sizeof(struct sockaddr))==-1 ){
+    if( connect( socketId, (struct sockaddr *)&endereco, sizeof(struct sockaddr))==-1 ){
         printf("Falha ao executar connect()\n");
-        //exit(EXIT_FAILURE);
+        exit(EXIT_FAILURE);
     }
-    */
+
     printf ("Cliente: conectado ao servidor\n");
     srand(time(NULL));
 
